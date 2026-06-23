@@ -53,59 +53,27 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
 
   const recipe = toRecipeCard(recipeData);
   const isOwner = Boolean(userId && userId === recipeData.userId);
-  const existingBookmark = userId
-    ? await prisma.bookmark.findUnique({
-        where: {
-          userId_recipeId: {
-            userId,
-            recipeId: recipe.id
-          }
-        }
-      })
-    : null;
-  const existingLike = userId
-    ? await prisma.like.findUnique({
-        where: {
-          userId_recipeId: {
-            userId,
-            recipeId: recipe.id
-          }
-        }
-      })
-    : null;
-  const comments = await prisma.comment.findMany({
-    where: {
-      recipeId: recipe.id
-    },
-    orderBy: [
-      {
-        likes: {
-          _count: "desc"
-        }
-      },
-      {
-        createdAt: "desc"
+  const [existingBookmark, existingLike, comments] = await Promise.all([
+    userId
+      ? prisma.bookmark.findUnique({
+          where: { userId_recipeId: { userId, recipeId: recipe.id } }
+        })
+      : null,
+    userId
+      ? prisma.like.findUnique({
+          where: { userId_recipeId: { userId, recipeId: recipe.id } }
+        })
+      : null,
+    prisma.comment.findMany({
+      where: { recipeId: recipe.id },
+      orderBy: [{ likes: { _count: "desc" } }, { createdAt: "desc" }],
+      include: {
+        user: true,
+        likes: userId ? { where: { userId }, select: { id: true } } : false,
+        _count: { select: { likes: true } }
       }
-    ],
-    include: {
-      user: true,
-      likes: userId
-        ? {
-            where: {
-              userId
-            },
-            select: {
-              id: true
-            }
-          }
-        : false,
-      _count: {
-        select: {
-          likes: true
-        }
-      }
-    }
-  });
+    })
+  ]);
   const formattedComments: RecipeComment[] = comments.map((comment) => ({
     id: comment.id,
     author: comment.user.nickname ?? comment.user.name ?? "RecipeHub 사용자",
