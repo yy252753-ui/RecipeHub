@@ -8,6 +8,7 @@ const pretendard = localFont({
   src: [{ path: "../../public/fonts/PretendardVariable.woff2", weight: "100 900" }],
   display: "swap",
   variable: "--font-pretendard",
+  preload: false,
 });
 
 const wantedSans = localFont({
@@ -27,11 +28,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,10 +35,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable} ${wantedSans.variable}`}>
-      <head>
-        <link rel="preconnect" href="https://res.cloudinary.com" />
-        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-      </head>
       <body>
         <Providers>
           <ToastProvider>{children}</ToastProvider>

@@ -5,12 +5,16 @@ import { PageShell } from "@/components/page-shell";
 import { ButtonLink } from "@/components/ui/button";
 import { Tag } from "@/components/ui/tag";
 import { prisma } from "@/lib/prisma";
-import { getRecipeById, getRecipeTasteNote, toRecipeCard } from "@/lib/recipe-queries";
+import { curatedRecipeIds, getRecipeById, getRecipeTasteNote, toRecipeCard } from "@/lib/recipe-queries";
 import { RecipeComments, type RecipeComment } from "./recipe-comments";
 import { RecipeEngagementActions } from "./recipe-engagement-actions";
 import { RecipeOwnerActions } from "./recipe-owner-actions";
 
 export const revalidate = 60;
+
+export function generateStaticParams() {
+  return curatedRecipeIds.map((id) => ({ id }));
+}
 
 type RecipeDetailPageProps = {
   params: Promise<{ id: string }>;

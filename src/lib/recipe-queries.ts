@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type { Recipe } from "@/types/recipe";
 
@@ -19,7 +20,7 @@ const difficultyLabels = {
   HARD: "어려움"
 } as const;
 
-const curatedRecipeIds = [
+export const curatedRecipeIds = [
   "sweet-corn-risotto",
   "tomato-basil-salad",
   "doenjang-pasta",
@@ -314,7 +315,7 @@ export async function getRecipeCards(options: RecipeListOptions = {}) {
   }));
 }
 
-export async function getRecipeById(id: string, options: { incrementView?: boolean } = {}) {
+export const getRecipeById = cache(async function getRecipeById(id: string, options: { incrementView?: boolean } = {}) {
   const recipe = await prisma.recipe.findFirst({
     where: {
       id,
@@ -338,7 +339,7 @@ export async function getRecipeById(id: string, options: { incrementView?: boole
     },
     include: recipeInclude
   });
-}
+});
 
 export async function getPopularTags(limit = 12) {
   const tags = await prisma.tag.findMany({
