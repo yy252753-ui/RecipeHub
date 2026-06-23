@@ -14,9 +14,11 @@ function getPrismaDatabaseUrl() {
 
   if (!usesPooler) return databaseUrl;
 
+  const isBuild = process.env.NEXT_PHASE === "phase-production-build";
   url.searchParams.set("pgbouncer", "true");
-  url.searchParams.set("connection_limit", "1");
-  url.searchParams.set("pool_timeout", "30");
+  // Build: 30개 페이지 동시 렌더링 대응, Runtime: 서버리스 효율
+  url.searchParams.set("connection_limit", isBuild ? "30" : "1");
+  url.searchParams.set("pool_timeout", isBuild ? "60" : "30");
 
   return url.toString();
 }
