@@ -1,0 +1,73 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-jp.css");
+@import url("https://cdn.jsdelivr.net/gh/wantedsans/wanted-sans@latest/packages/wanted-sans/fonts/webfonts/variable/wanted-sans-variable.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Pretendard JP", "Pretendard Variable", "Pretendard", -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-display: "Wanted Sans Variable", "Wanted Sans", var(--font-sans);
+  --color-primary-normal: #0066ff;
+  --color-primary-strong: #005eeb;
+  --color-background-primary-low: #eaf2fe;
+  --color-background-neutral-primary: #ffffff;
+  --color-background-neutral-secondary: #f7f7f8;
+  --color-background-neutral-tertiary: rgba(112, 115, 124, 0.08);
+  --color-background-neutral-inverse: #14191e;
+  --color-text-neutral-primary: #000000;
+  --color-text-neutral-secondary: rgba(46, 47, 51, 0.88);
+  --color-text-neutral-tertiary: rgba(55, 56, 60, 0.61);
+  --color-text-neutral-assistive: rgba(55, 56, 60, 0.28);
+  --color-line-normal-normal: rgba(112, 115, 124, 0.22);
+  --color-line-solid-neutral: #eaebec;
+  --color-status-positive: #00bf40;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background-neutral-secondary);
+  color: var(--color-text-neutral-primary);
+  font: 500 16px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.container-page {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+@media (max-width: 760px) {
+  .container-page {
+    width: min(100% - 28px, 1180px);
+  }
+}

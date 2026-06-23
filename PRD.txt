@@ -1,0 +1,287 @@
+🍳 RecipeHub PRD (Product Requirements Document)
+1. 프로젝트 개요
+프로젝트명
+
+RecipeHub (가칭)
+
+프로젝트 목적
+
+사용자가 자신의 레시피를 공유하고 다른 사용자와 소통할 수 있는 레시피 커뮤니티 플랫폼을 구축한다.
+
+블로그 서비스인 Velog, 브런치와 유사한 구조를 가지며, 콘텐츠 중심의 커뮤니티 경험을 제공한다.
+
+2. 문제 정의
+
+기존 레시피 서비스는 검색 중심 구조가 강하고 개인 창작자의 레시피를 지속적으로 구독하거나 커뮤니티적으로 소비하는 경험이 부족하다.
+
+RecipeHub는 다음 가치를 제공한다.
+
+누구나 쉽게 레시피 작성
+레시피 중심 커뮤니티 형성
+태그 기반 탐색
+창작자 중심 콘텐츠 소비
+3. 목표
+MVP 목표
+
+사용자가
+
+소셜 로그인
+레시피 작성
+레시피 조회
+레시피 수정/삭제
+태그 검색
+프로필 조회
+
+를 수행할 수 있어야 한다.
+
+4. 타겟 사용자
+Primary User
+요리를 즐기는 일반 사용자
+자신의 레시피를 공유하고 싶은 사용자
+Secondary User
+다양한 레시피를 탐색하는 사용자
+특정 요리 카테고리를 즐겨보는 사용자
+5. 기술 스택
+Frontend
+Next.js 14 (App Router)
+TypeScript
+Tailwind CSS
+TanStack Query
+React Hook Form
+Zod
+Backend
+Next.js Route Handler
+Prisma ORM
+Auth.js (NextAuth)
+Database
+PostgreSQL
+Storage
+Cloudinary
+Deployment
+Vercel
+Supabase PostgreSQL
+6. 기능 범위
+MVP
+인증
+Google 로그인
+Kakao 로그인
+레시피
+레시피 작성
+레시피 수정
+레시피 삭제
+레시피 조회
+임시 저장
+대표 이미지 업로드
+단계별 이미지 업로드
+탐색
+레시피 목록
+키워드 검색
+태그 필터
+최신순 정렬
+무한 스크롤
+프로필
+사용자 프로필
+작성 레시피 목록
+V2
+커뮤니티
+댓글
+대댓글
+반응
+좋아요
+스크랩
+소셜
+팔로우
+팔로잉
+팔로우 피드
+정렬
+인기순 정렬
+7. 사용자 플로우
+비회원
+
+홈
+→ 레시피 목록
+→ 레시피 상세 조회
+
+로그인 사용자
+
+로그인
+→ 레시피 작성
+→ 이미지 업로드
+→ 발행
+→ 상세 페이지
+
+검색 사용자
+
+레시피 목록
+→ 키워드 입력
+→ 태그 선택
+→ 결과 확인
+
+프로필 사용자
+
+프로필
+→ 작성한 레시피 확인
+
+8. 페이지 구조
+
+/
+
+홈
+
+/recipes
+
+레시피 목록
+
+/recipes/[id]
+
+레시피 상세
+
+/recipes/write
+
+레시피 작성
+
+/recipes/[id]/edit
+
+레시피 수정
+
+/users/[id]
+
+사용자 프로필
+
+/auth/login
+
+로그인
+
+/feed
+
+팔로우 피드 (V2)
+
+9. 데이터 모델
+User
+id
+email
+nickname
+profileImg
+provider
+providerId
+createdAt
+updatedAt
+Recipe
+id
+userId
+title
+description
+cookTime
+difficulty
+thumbnailImg
+status
+createdAt
+updatedAt
+Ingredient
+id
+recipeId
+name
+amount
+unit
+order
+Step
+id
+recipeId
+order
+description
+img
+Tag
+id
+name
+RecipeTag
+recipeId
+tagId
+10. API 범위
+Auth
+
+/api/auth/*
+
+Auth.js 기본 라우트 사용
+
+Recipes
+
+GET /api/recipes
+
+GET /api/recipes/
+
+POST /api/recipes
+
+PATCH /api/recipes/
+
+DELETE /api/recipes/
+
+Upload
+
+POST /api/upload/signature
+
+Users
+
+GET /api/users/
+
+GET /api/users//recipes
+
+Tags
+
+GET /api/tags
+
+11. 비기능 요구사항
+성능
+Cursor Pagination 기반 무한 스크롤
+이미지 최적화
+Lazy Loading
+보안
+OAuth 기반 인증
+Route 보호
+입력 검증(Zod)
+데이터 무결성
+Prisma Transaction 사용
+Cascade Delete 적용
+12. 아키텍처
+
+src/
+
+app/
+
+components/
+
+features/
+
+lib/
+
+hooks/
+
+types/
+
+constants/
+
+주요 라이브러리
+
+Auth.js
+
+Prisma
+
+TanStack Query
+
+React Hook Form
+
+Zod
+
+Cloudinary
+
+13. 성공 기준
+
+MVP 완료 시
+
+Google/Kakao 로그인 가능
+레시피 CRUD 가능
+이미지 업로드 가능
+태그 검색 가능
+무한 스크롤 가능
+프로필 조회 가능
+
+위 기능이 정상 동작하면 MVP 성공으로 정의한다.

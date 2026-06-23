@@ -1,0 +1,89 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.9.0
+2 info using node@v24.14.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\User\Desktop\프로젝트 폴더\recipe\.npmrc
+5 silly config load:file:C:\Users\User\.npmrc
+6 silly config load:file:C:\Users\User\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm audit
+8 verbose argv "audit" "--omit" "dev" "--cache" ".npm-cache"
+9 verbose logfile logs-max:10 dir:C:\Users\User\Desktop\프로젝트 폴더\recipe\.npm-cache\_logs\2026-06-04T03_43_00_548Z-
+10 verbose logfile C:\Users\User\Desktop\프로젝트 폴더\recipe\.npm-cache\_logs\2026-06-04T03_43_00_548Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly audit bulk request {
+13 silly audit   '@auth/core': [ '0.41.2' ],
+13 silly audit   '@auth/prisma-adapter': [ '2.11.2' ],
+13 silly audit   '@hookform/resolvers': [ '3.10.0' ],
+13 silly audit   '@next/env': [ '14.2.35' ],
+13 silly audit   '@next/swc-darwin-arm64': [ '14.2.33' ],
+13 silly audit   '@next/swc-darwin-x64': [ '14.2.33' ],
+13 silly audit   '@next/swc-linux-arm64-gnu': [ '14.2.33' ],
+13 silly audit   '@next/swc-linux-arm64-musl': [ '14.2.33' ],
+13 silly audit   '@next/swc-linux-x64-gnu': [ '14.2.33' ],
+13 silly audit   '@next/swc-linux-x64-musl': [ '14.2.33' ],
+13 silly audit   '@next/swc-win32-arm64-msvc': [ '14.2.33' ],
+13 silly audit   '@next/swc-win32-ia32-msvc': [ '14.2.33' ],
+13 silly audit   '@next/swc-win32-x64-msvc': [ '14.2.33' ],
+13 silly audit   '@panva/hkdf': [ '1.2.1' ],
+13 silly audit   '@prisma/client': [ '5.22.0' ],
+13 silly audit   '@prisma/debug': [ '5.22.0' ],
+13 silly audit   '@prisma/engines': [ '5.22.0' ],
+13 silly audit   '@prisma/engines-version': [ '5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2' ],
+13 silly audit   '@prisma/fetch-engine': [ '5.22.0' ],
+13 silly audit   '@prisma/get-platform': [ '5.22.0' ],
+13 silly audit   '@swc/counter': [ '0.1.3' ],
+13 silly audit   '@swc/helpers': [ '0.5.5' ],
+13 silly audit   '@tanstack/query-core': [ '5.101.0' ],
+13 silly audit   '@tanstack/react-query': [ '5.101.0' ],
+13 silly audit   busboy: [ '1.6.0' ],
+13 silly audit   'caniuse-lite': [ '1.0.30001793' ],
+13 silly audit   'client-only': [ '0.0.1' ],
+13 silly audit   fsevents: [ '2.3.3' ],
+13 silly audit   'graceful-fs': [ '4.2.11' ],
+13 silly audit   jose: [ '6.2.3' ],
+13 silly audit   'js-tokens': [ '4.0.0' ],
+13 silly audit   'loose-envify': [ '1.4.0' ],
+13 silly audit   'lucide-react': [ '0.468.0' ],
+13 silly audit   nanoid: [ '3.3.12' ],
+13 silly audit   next: [ '14.2.35' ],
+13 silly audit   'next-auth': [ '5.0.0-beta.31' ],
+13 silly audit   postcss: [ '8.4.31' ],
+13 silly audit   oauth4webapi: [ '3.8.6' ],
+13 silly audit   picocolors: [ '1.1.1' ],
+13 silly audit   preact: [ '10.24.3' ],
+13 silly audit   'preact-render-to-string': [ '6.5.11' ],
+13 silly audit   prisma: [ '5.22.0' ],
+13 silly audit   react: [ '18.3.1' ],
+13 silly audit   'react-dom': [ '18.3.1' ],
+13 silly audit   'react-hook-form': [ '7.77.0' ],
+13 silly audit   scheduler: [ '0.23.2' ],
+13 silly audit   'source-map-js': [ '1.2.1' ],
+13 silly audit   streamsearch: [ '1.1.0' ],
+13 silly audit   'styled-jsx': [ '5.1.1' ],
+13 silly audit   tslib: [ '2.8.1' ],
+13 silly audit   zod: [ '3.25.76' ]
+13 silly audit }
+14 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+15 verbose audit error FetchError: request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason: 
+15 verbose audit error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+15 verbose audit error     at ClientRequest.emit (node:events:508:28)
+15 verbose audit error     at emitErrorEvent (node:_http_client:108:11)
+15 verbose audit error     at _destroy (node:_http_client:963:9)
+15 verbose audit error     at onSocketNT (node:_http_client:983:5)
+15 verbose audit error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+15 verbose audit error   code: 'EACCES',
+15 verbose audit error   errno: 'EACCES',
+15 verbose audit error   type: 'system'
+15 verbose audit error }
+16 silly audit error undefined
+17 silly audit report null
+18 warn audit request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason: 
+19 error audit endpoint returned an error
+20 verbose cwd C:\Users\User\Desktop\프로젝트 폴더\recipe
+21 verbose os Windows_NT 10.0.26100
+22 verbose node v24.14.0
+23 verbose npm  v11.9.0
+24 verbose exit 1
+25 verbose code 1
+26 error A complete log of this run can be found in: C:\Users\User\Desktop\프로젝트 폴더\recipe\.npm-cache\_logs\2026-06-04T03_43_00_548Z-debug-0.log

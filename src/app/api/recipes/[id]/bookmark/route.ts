@@ -1,0 +1,65 @@
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+export async function POST(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Authentication required" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const recipe = await prisma.recipe.findFirst({
+    where: {
+      id,
+      status: "PUBLISHED"
+    },
+    select: {
+      id: true
+    }
+  });
+
+  if (!recipe) {
+    return NextResponse.json({ message: "Recipe not found" }, { status: 404 });
+  }
+
+  const existingBookmark = await prisma.bookmark.findUnique({
+    where: {
+      userId_recipeId: {
+        userId,
+        recipeId: id
+      }
+    }
+  });
+
+  if (existingBookmark) {
+    await prisma.bookmark.delete({
+      where: {
+        id: existingBookmark.id
+      }
+    });
+  } else {
+    await prisma.bookmark.create({
+      data: {
+        userId,
+        recipeId: id
+      }
+    });
+  }
+
+  const bookmarks = await prisma.bookmark.count({
+    where: {
+      recipeId: id
+    }
+  });
+
+  return NextResponse.json({
+    bookmarked: !existingBookmark,
+    bookmarks
+  });
+}
