@@ -2,35 +2,46 @@
 
 import { Bookmark, Heart, Share2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/toast-provider";
 
 export function RecipeEngagementActions({
   recipeId,
   title,
   initialBookmarks,
-  initialBookmarked,
   initialLikes,
-  initialLiked,
-  isLoggedIn
 }: {
   recipeId: string;
   title: string;
   initialBookmarks: number;
-  initialBookmarked: boolean;
   initialLikes: number;
-  initialLiked: boolean;
-  isLoggedIn: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
   const [bookmarks, setBookmarks] = useState(initialBookmarks);
-  const [bookmarked, setBookmarked] = useState(initialBookmarked);
+  const [bookmarked, setBookmarked] = useState(false);
   const [likes, setLikes] = useState(initialLikes);
-  const [liked, setLiked] = useState(initialLiked);
+  const [liked, setLiked] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/recipes/${recipeId}/user-status`)
+      .then((r) => r.json())
+      .then((data: { bookmarked: boolean; liked: boolean; isOwner: boolean }) => {
+        setBookmarked(data.bookmarked);
+        setLiked(data.liked);
+        setIsLoggedIn(data.bookmarked || data.liked || data.isOwner ? true : false);
+      })
+      .catch(() => {});
+
+    fetch(`/api/auth/session`)
+      .then((r) => r.json())
+      .then((s) => { if (s?.user) setIsLoggedIn(true); })
+      .catch(() => {});
+  }, [recipeId]);
 
   async function toggleBookmark() {
     if (!isLoggedIn) {

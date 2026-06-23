@@ -2,7 +2,7 @@ import { PageShell } from "@/components/page-shell";
 import { RecipeCard } from "@/components/recipe-card";
 import { getRecipeCards } from "@/lib/recipe-queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function FeedPage() {
   const recipes = await getRecipeCards({ limit: 3 });

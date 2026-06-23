@@ -5,7 +5,7 @@ import { Tag } from "@/components/ui/tag";
 import { getPopularTags, getRecipePage, normalizeRecipeSort } from "@/lib/recipe-queries";
 import { RecipeGrid } from "./recipe-grid";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 type RecipesPageProps = {
   searchParams?: Promise<{

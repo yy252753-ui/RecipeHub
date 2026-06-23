@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Providers } from "@/components/providers";
 import { ToastProvider } from "@/components/toast-provider";
 import "./globals.css";
 
@@ -34,7 +35,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable} ${wantedSans.variable}`}>
       <body>
-        <ToastProvider>{children}</ToastProvider>
+        <Providers>
+          <ToastProvider>{children}</ToastProvider>
+        </Providers>
       </body>
     </html>
   );

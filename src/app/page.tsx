@@ -7,7 +7,7 @@ import { Tag } from "@/components/ui/tag";
 import { routes } from "@/constants/routes";
 import { getPopularTags, getRecipeCards } from "@/lib/recipe-queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [recipes, popularTags] = await Promise.all([getRecipeCards(), getPopularTags(10)]);

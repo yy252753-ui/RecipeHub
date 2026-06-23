@@ -2,6 +2,7 @@
 
 import { Heart, MessageCircle, Send } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useToast } from "@/components/toast-provider";
 
@@ -17,10 +18,11 @@ export type RecipeComment = {
 type RecipeCommentsProps = {
   recipeId: string;
   initialComments: RecipeComment[];
-  isLoggedIn: boolean;
 };
 
-export function RecipeComments({ recipeId, initialComments, isLoggedIn }: RecipeCommentsProps) {
+export function RecipeComments({ recipeId, initialComments }: RecipeCommentsProps) {
+  const { data: session } = useSession();
+  const isLoggedIn = Boolean(session?.user);
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();

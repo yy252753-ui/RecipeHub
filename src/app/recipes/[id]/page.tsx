@@ -4,19 +4,16 @@ import { FoodImage } from "@/components/food-image";
 import { PageShell } from "@/components/page-shell";
 import { ButtonLink } from "@/components/ui/button";
 import { Tag } from "@/components/ui/tag";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getRecipeById, getRecipeTasteNote, toRecipeCard } from "@/lib/recipe-queries";
 import { RecipeComments, type RecipeComment } from "./recipe-comments";
 import { RecipeEngagementActions } from "./recipe-engagement-actions";
 import { RecipeOwnerActions } from "./recipe-owner-actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 type RecipeDetailPageProps = {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: RecipeDetailPageProps) {
@@ -36,57 +33,45 @@ export async function generateMetadata({ params }: RecipeDetailPageProps) {
       title: recipe.title,
       description: recipe.description,
       type: "article" as const,
-      ...(imageUrl ? { images: [imageUrl] } : {})
-    }
+      ...(imageUrl ? { images: [imageUrl] } : {}),
+    },
   };
 }
 
 export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   const { id } = await params;
-  const session = await auth();
-  const userId = (session?.user as { id?: string } | undefined)?.id;
-  const recipeData = await getRecipeById(id, { incrementView: true });
+  const [recipeData, comments] = await Promise.all([
+    getRecipeById(id, {}),
+    prisma.comment.findMany({
+      where: { recipeId: id },
+      orderBy: [{ likes: { _count: "desc" } }, { createdAt: "desc" }],
+      include: {
+        user: true,
+        _count: { select: { likes: true } },
+      },
+    }),
+  ]);
 
   if (!recipeData) {
     notFound();
   }
 
   const recipe = toRecipeCard(recipeData);
-  const isOwner = Boolean(userId && userId === recipeData.userId);
-  const [existingBookmark, existingLike, comments] = await Promise.all([
-    userId
-      ? prisma.bookmark.findUnique({
-          where: { userId_recipeId: { userId, recipeId: recipe.id } }
-        })
-      : null,
-    userId
-      ? prisma.like.findUnique({
-          where: { userId_recipeId: { userId, recipeId: recipe.id } }
-        })
-      : null,
-    prisma.comment.findMany({
-      where: { recipeId: recipe.id },
-      orderBy: [{ likes: { _count: "desc" } }, { createdAt: "desc" }],
-      include: {
-        user: true,
-        likes: userId ? { where: { userId }, select: { id: true } } : false,
-        _count: { select: { likes: true } }
-      }
-    })
-  ]);
+
   const formattedComments: RecipeComment[] = comments.map((comment) => ({
     id: comment.id,
     author: comment.user.nickname ?? comment.user.name ?? "RecipeHub 사용자",
     content: comment.content,
     likes: comment._count.likes,
-    liked: Array.isArray(comment.likes) && comment.likes.length > 0,
+    liked: false,
     createdAt: new Intl.DateTimeFormat("ko-KR", {
       month: "2-digit",
       day: "2-digit",
       hour: "2-digit",
-      minute: "2-digit"
-    }).format(comment.createdAt)
+      minute: "2-digit",
+    }).format(comment.createdAt),
   }));
+
   const tasteNote = getRecipeTasteNote(recipe.id, recipe.title);
 
   return (
@@ -119,17 +104,11 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
             recipeId={recipe.id}
             title={recipe.title}
             initialBookmarks={recipe.bookmarks}
-            initialBookmarked={Boolean(existingBookmark)}
             initialLikes={recipe.likes}
-            initialLiked={Boolean(existingLike)}
-            isLoggedIn={Boolean(userId)}
           />
         </div>
-        {isOwner ? (
-          <div className="mb-7">
-            <RecipeOwnerActions recipeId={recipe.id} />
-          </div>
-        ) : null}
+
+        <RecipeOwnerActions recipeId={recipe.id} recipeUserId={recipeData.userId} />
 
         <FoodImage
           label={recipe.title}
@@ -214,7 +193,6 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
             <RecipeComments
               recipeId={recipe.id}
               initialComments={formattedComments}
-              isLoggedIn={Boolean(userId)}
             />
           </article>
 
@@ -237,15 +215,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   );
 }
 
-function Stat({
-  icon: Icon,
-  label,
-  value
-}: {
-  icon: typeof Clock;
-  label: string;
-  value: string;
-}) {
+function Stat({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) {
   return (
     <div className="flex items-center justify-between rounded-lg bg-[var(--color-background-neutral-secondary)] px-3 py-3">
       <span className="inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-neutral-secondary)]">
