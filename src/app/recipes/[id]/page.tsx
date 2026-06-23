@@ -76,7 +76,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
 
   return (
     <PageShell>
-      {recipe.thumbnailImg?.startsWith("/") && (
+      {recipe.thumbnailImg && (
         <link
           rel="preload"
           as="image"
