@@ -64,6 +64,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
 
   const formattedComments: RecipeComment[] = comments.map((comment) => ({
     id: comment.id,
+    authorId: comment.userId,
     author: comment.user.nickname ?? comment.user.name ?? "RecipeHub 사용자",
     content: comment.content,
     likes: comment._count.likes,

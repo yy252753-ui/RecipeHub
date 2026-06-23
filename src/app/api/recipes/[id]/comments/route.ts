@@ -58,6 +58,7 @@ export async function POST(
   return NextResponse.json({
     comment: {
       id: comment.id,
+      authorId: comment.userId,
       author: comment.user.nickname ?? comment.user.name ?? "RecipeHub 사용자",
       content: comment.content,
       likes: comment._count.likes,

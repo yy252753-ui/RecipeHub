@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, MessageCircle, Send } from "lucide-react";
+import { Heart, MessageCircle, Send, Trash2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { useToast } from "@/components/toast-provider";
 
 export type RecipeComment = {
   id: string;
+  authorId: string;
   author: string;
   content: string;
   likes: number;
@@ -23,6 +24,7 @@ type RecipeCommentsProps = {
 export function RecipeComments({ recipeId, initialComments }: RecipeCommentsProps) {
   const { data: session } = useSession();
   const isLoggedIn = Boolean(session?.user);
+  const currentUserId = (session?.user as { id?: string } | undefined)?.id;
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
@@ -30,6 +32,7 @@ export function RecipeComments({ recipeId, initialComments }: RecipeCommentsProp
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingLikeId, setPendingLikeId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   async function submitComment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,6 +91,23 @@ export function RecipeComments({ recipeId, initialComments }: RecipeCommentsProp
     toast(result.liked ? "좋아요를 눌렀습니다." : "좋아요를 취소했습니다.");
   }
 
+  async function deleteComment(commentId: string) {
+    if (!window.confirm("댓글을 삭제할까요?")) return;
+
+    setPendingDeleteId(commentId);
+    const response = await fetch(`/api/comments/${commentId}`, { method: "DELETE" });
+    setPendingDeleteId(null);
+
+    if (response.status === 401) {
+      router.push(`/auth/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    if (!response.ok) return;
+
+    setComments((current) => current.filter((c) => c.id !== commentId));
+    toast("댓글을 삭제했습니다.");
+  }
+
   return (
     <section className="mt-10 rounded-xl border border-[var(--color-line-normal-normal)] bg-white p-5 shadow-sm">
       <div className="mb-5 flex items-center justify-between gap-3">
@@ -141,19 +161,32 @@ export function RecipeComments({ recipeId, initialComments }: RecipeCommentsProp
                   {comment.createdAt}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => { void toggleCommentLike(comment.id); }}
-                disabled={pendingLikeId === comment.id}
-                className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border px-3 text-xs font-extrabold disabled:opacity-60 ${
-                  comment.liked
-                    ? "border-rose-200 bg-rose-50 text-rose-600"
-                    : "border-[var(--color-line-normal-normal)] bg-white text-[var(--color-text-neutral-secondary)]"
-                }`}
-              >
-                <Heart size={14} fill={comment.liked ? "currentColor" : "none"} />
-                {comment.likes}
-              </button>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => { void toggleCommentLike(comment.id); }}
+                  disabled={pendingLikeId === comment.id}
+                  className={`inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-extrabold disabled:opacity-60 ${
+                    comment.liked
+                      ? "border-rose-200 bg-rose-50 text-rose-600"
+                      : "border-[var(--color-line-normal-normal)] bg-white text-[var(--color-text-neutral-secondary)]"
+                  }`}
+                >
+                  <Heart size={14} fill={comment.liked ? "currentColor" : "none"} />
+                  {comment.likes}
+                </button>
+                {comment.authorId === currentUserId && (
+                  <button
+                    type="button"
+                    onClick={() => { void deleteComment(comment.id); }}
+                    disabled={pendingDeleteId === comment.id}
+                    className="grid h-9 w-9 place-items-center rounded-md border border-[var(--color-line-normal-normal)] bg-white text-[var(--color-text-neutral-tertiary)] hover:border-red-200 hover:bg-red-50 hover:text-red-500 disabled:opacity-60"
+                    aria-label="댓글 삭제"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
             </div>
             <p className="whitespace-pre-line text-sm font-normal leading-7 text-[var(--color-text-neutral-secondary)]">
               {comment.content}
