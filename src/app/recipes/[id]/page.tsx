@@ -159,6 +159,8 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           label={recipe.title}
           src={recipe.thumbnailImg}
           height={460}
+          priority
+          sizes="(max-width: 1024px) 100vw, 1120px"
           className="mb-9 rounded-xl border border-[var(--color-line-normal-normal)] shadow-sm"
         />
 
@@ -225,6 +227,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                       label={`${recipe.title} ${index + 1}단계`}
                       src={step.img}
                       height={150}
+                      sizes="(max-width: 768px) 100vw, 220px"
                       className="rounded-lg"
                     />
                   </section>

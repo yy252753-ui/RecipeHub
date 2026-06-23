@@ -69,8 +69,8 @@ export function RecipeGrid({ initialItems, initialHasMore, q, tag, sort }: Recip
   return (
     <>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {items.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+        {items.map((recipe, i) => (
+          <RecipeCard key={recipe.id} recipe={recipe} priority={i < 6} />
         ))}
       </div>
       <div ref={sentinelRef} className="mt-10 flex justify-center py-4">

@@ -4,10 +4,14 @@ import { FoodImage } from "@/components/food-image";
 import { Tag } from "@/components/ui/tag";
 import type { Recipe } from "@/types/recipe";
 
-export function RecipeCard({ recipe }: { recipe: Recipe }) {
+export function RecipeCard({ recipe, priority = false }: { recipe: Recipe; priority?: boolean }) {
   return (
     <article className="group overflow-hidden rounded-xl border border-[var(--color-line-normal-normal)] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
-      <Link href={`/recipes/${recipe.id}`} className="relative block">
+      <Link
+        href={`/recipes/${recipe.id}`}
+        aria-label={recipe.title}
+        className="relative block"
+      >
         {recipe.rank ? (
           <span className={`absolute left-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full border-2 text-base font-extrabold shadow-md ${rankClassName(recipe.rank)}`}>
             {recipe.rank}
@@ -17,6 +21,8 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
           label={recipe.title}
           src={recipe.thumbnailImg}
           height={190}
+          priority={priority}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 267px"
           className="transition duration-300 group-hover:scale-[1.02]"
         />
       </Link>
@@ -48,10 +54,10 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
             {recipe.bookmarks}
           </span>
         </div>
-        <div className="mt-3 flex items-center justify-between gap-3 text-xs font-bold text-[var(--color-text-neutral-tertiary)]">
+        <div className="mt-3 flex items-center justify-between gap-3 text-xs font-bold text-[var(--color-text-neutral-secondary)]">
           <span className="truncate">{recipe.author}</span>
           <span className="inline-flex shrink-0 items-center gap-3">
-            <span className="inline-flex items-center gap-1 text-rose-600">
+            <span className="inline-flex items-center gap-1 text-rose-700">
               <Heart size={14} fill="currentColor" />
               {recipe.likes.toLocaleString()}
             </span>

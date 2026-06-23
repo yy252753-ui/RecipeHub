@@ -22,9 +22,11 @@ export default async function HomePage() {
             label={featuredRecipe?.title ?? "RecipeHub"}
             src={featuredRecipe?.thumbnailImg}
             height={350}
+            priority
+            sizes="(max-width: 1024px) 100vw, 500px"
           />
           <div className="flex flex-col justify-center p-6 md:p-9">
-            <span className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-extrabold text-rose-600">
+            <span className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-extrabold text-rose-700">
               <Flame size={14} />
               오늘의 인기 레시피
             </span>
@@ -64,8 +66,8 @@ export default async function HomePage() {
               </ButtonLink>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {recipes.slice(0, 12).map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+              {recipes.slice(0, 12).map((recipe, i) => (
+                <RecipeCard key={recipe.id} recipe={recipe} priority={i < 3} />
               ))}
             </div>
           </section>
@@ -81,7 +83,7 @@ export default async function HomePage() {
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-extrabold">{recipe.title}</p>
-                      <p className="text-xs font-bold text-rose-600">
+                      <p className="text-xs font-bold text-rose-700">
                         좋아요 {recipe.likes.toLocaleString()}
                       </p>
                     </div>

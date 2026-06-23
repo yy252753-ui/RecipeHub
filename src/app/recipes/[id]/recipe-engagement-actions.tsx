@@ -109,7 +109,7 @@ export function RecipeEngagementActions({
         disabled={isLiking}
         className={`inline-flex h-10 items-center gap-2 rounded-md border px-4 text-sm font-bold disabled:opacity-60 ${
           liked
-            ? "border-rose-200 bg-rose-50 text-rose-600"
+            ? "border-rose-200 bg-rose-50 text-rose-700"
             : "border-[var(--color-line-normal-normal)] bg-white"
         }`}
       >
