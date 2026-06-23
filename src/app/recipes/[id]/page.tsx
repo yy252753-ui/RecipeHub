@@ -123,6 +123,14 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
 
   return (
     <PageShell>
+      {recipe.thumbnailImg?.startsWith("/") && (
+        <link
+          rel="preload"
+          as="image"
+          href={`/_next/image?url=${encodeURIComponent(recipe.thumbnailImg)}&w=1080&q=75`}
+          fetchPriority="high"
+        />
+      )}
       <div className="container-page max-w-[1120px]">
         <div className="mb-4 flex flex-wrap gap-2">
           {recipe.tags.map((tag) => (
